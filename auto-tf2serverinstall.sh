@@ -36,7 +36,7 @@ sudo dpkg --add-architecture i386; sudo apt-get update; sudo apt-get install mai
 
 # Add user account
 useradd -m -s /bin/bash tf2server
-passwd tf2server
+echo password1 | passwd tf2server --stdin
 
 # Get the framework script and install the server.
 su - tf2server -c 'wget -N --no-check-certificate https://gameservermanagers.com/dl/linuxgsm.sh && chmod +x linuxgsm.sh && bash linuxgsm.sh tf2server'
@@ -44,58 +44,9 @@ su - tf2server -c '/home/tf2server/tf2server auto-install'
 su - tf2server -c "echo "defaultmap=\"$DEFAULTMAP\"" > /home/tf2server/lgsm/config-lgsm/tf2server/tf2server.cfg"
 su - tf2server -c "echo "maxplayers=\"$PLAYERS\"" >> /home/tf2server/lgsm/config-lgsm/tf2server/tf2server.cfg"
 su - tf2server -c "echo 'updateonstart="on"' >> /home/tf2server/lgsm/config-lgsm/tf2server/tf2server.cfg"
-su - tf2server -c 'vim /home/tf2server/lgsm/config-lgsm/tf2server/tf2server.cfg'
+# su - tf2server -c 'vim /home/tf2server/lgsm/config-lgsm/tf2server/tf2server.cfg'
 su - tf2server -c '/home/tf2server/tf2server start'
 
-# Configure firewall
-sudo apt-get install -y iptables iptables-persistent
-
-# Wipe the v4 rules
-sudo iptables -P INPUT ACCEPT
-sudo iptables -P FORWARD ACCEPT
-sudo iptables -P OUTPUT ACCEPT
-sudo iptables -t nat -F
-sudo iptables -t mangle -F
-sudo iptables -F
-sudo iptables -X
-
-# Wipe the v6 rules
-sudo ip6tables -P INPUT ACCEPT
-sudo ip6tables -P FORWARD ACCEPT
-sudo ip6tables -P OUTPUT ACCEPT
-sudo ip6tables -t nat -F
-sudo ip6tables -t mangle -F
-sudo ip6tables -F
-sudo ip6tables -X
-
-# Confiure ipv4 firewall
-sudo iptables -I INPUT 1 -i lo -j ACCEPT
-sudo iptables -A INPUT -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
-sudo iptables -A INPUT -p tcp -m state --state NEW,ESTABLISHED --dport 22 -j ACCEPT
-sudo iptables -A INPUT -p icmp --icmp-type echo-request -j ACCEPT
-sudo iptables -A INPUT -p tcp --dport 80 -m state --state NEW,ESTABLISHED  -j ACCEPT
-sudo iptables -A INPUT -p tcp --dport 443 -m state --state NEW,ESTABLISHED  -j ACCEPT
-sudo iptables -A INPUT -p udp --dport 27015 -m state --state NEW,ESTABLISHED  -j ACCEPT
-sudo iptables -A INPUT -p tcp --dport 27015 -m state --state NEW,ESTABLISHED  -j ACCEPT
-sudo iptables -A INPUT -p udp --dport 27020 -m state --state NEW,ESTABLISHED  -j ACCEPT
-sudo iptables -P INPUT DROP
-
-# Configure ipv6 firewall
-sudo ip6tables -P INPUT DROP
-sudo ip6tables -P FORWARD DROP
-sudo ip6tables -P OUTPUT ACCEPT
-sudo ip6tables -A INPUT -i lo -j ACCEPT
-sudo ip6tables -A INPUT -p tcp --syn -j DROP
-sudo ip6tables -A INPUT -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
-sudo ip6tables -A INPUT -p ipv6-icmp -j ACCEPT
-sudo ip6tables -A INPUT -m state --state NEW -m udp -p udp -s fe80::/10 --dport 546 -j ACCEPT
-sudo ip6tables -A INPUT -m state --state NEW -m tcp -p tcp --dport 22 -j ACCEPT
-sudo ip6tables -A INPUT -m state --state NEW -m tcp -p tcp --dport 80 -j ACCEPT
-sudo ip6tables -A INPUT -m state --state NEW -m tcp -p tcp --dport 443 -j ACCEPT
-
-# Save the firewall rules
-iptables-save > /etc/iptables/rules.v4
-ip6tables-save > /etc/iptables/rules.v6
 
 # Setup web server
 sudo apt-get install -y apache2
