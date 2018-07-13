@@ -19,7 +19,7 @@ then
 fi
 
 # Install sudo incase its not installed.
-apt-get -y install sudo
+apt-get -y install sudo chpasswd
 
 # Get sudo rights just in case
 sudo -v
@@ -36,7 +36,7 @@ sudo dpkg --add-architecture i386; sudo apt-get update; sudo apt-get install mai
 
 # Add user account
 useradd -m -s /bin/bash tf2server
-echo password1 | passwd tf2server --stdin
+echo password1 | chpasswd tf2server
 
 # Get the framework script and install the server.
 su - tf2server -c 'wget -N --no-check-certificate https://gameservermanagers.com/dl/linuxgsm.sh && chmod +x linuxgsm.sh && bash linuxgsm.sh tf2server'
