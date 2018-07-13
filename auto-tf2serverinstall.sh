@@ -89,11 +89,8 @@ su - tf2server -c '/home/tf2server/steamid.sh'
 su - tf2server -c 'rm -f /home/tf2server/steamid.sh'
 
 # Restart the server to load sourcemod install.
-su - tf2server -c '/home/tf2server/tf2server restart'
+# su - tf2server -c '/home/tf2server/tf2server restart'
 
 # Add cronjobs
 echo "@reboot         tf2server /home/tf2server/tf2server start" >> /etc/crontab
 echo "0 0     * * *   tf2server /home/tf2server/tf2server restart" >> /etc/crontab
-
-# Set a restart of the server for midnight incase it is not done manually.
-sudo shutdown -r -t 0:00
