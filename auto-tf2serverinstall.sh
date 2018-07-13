@@ -46,7 +46,7 @@ su - tf2server -c "echo "defaultmap=\"$DEFAULTMAP\"" > /home/tf2server/lgsm/conf
 su - tf2server -c "echo "maxplayers=\"$PLAYERS\"" >> /home/tf2server/lgsm/config-lgsm/tf2server/tf2server.cfg"
 su - tf2server -c "echo 'updateonstart="on"' >> /home/tf2server/lgsm/config-lgsm/tf2server/tf2server.cfg"
 # su - tf2server -c 'vim /home/tf2server/lgsm/config-lgsm/tf2server/tf2server.cfg'
-su - tf2server -c '/home/tf2server/tf2server start'
+# su - tf2server -c '/home/tf2server/tf2server start'
 
 
 # Setup web server
@@ -54,8 +54,6 @@ sudo apt-get install -y apache2
 mkdir -p /var/www/html/fastdl/tf2/
 cd /var/www/html/fastdl/tf2/
 ln -s /home/tf2server/serverfiles/tf/maps maps
-sudo systemctl start apache2.service
-sudo systemctl enable apache2.service
 mv /var/www/html/index.html /var/www/html/index.html.bak
 
 # Setup metamod and sourcemod
